@@ -1,8 +1,9 @@
-﻿namespace PhoneBook.BusinessLogic.Handlers
+﻿namespace PhoneBook.Contracts.Dto
 {
-    public class HandleResult
+    public class HandlerResult
     {
         public bool Success { get; set; }
+
         public string Message { get; set; }
     }
 }

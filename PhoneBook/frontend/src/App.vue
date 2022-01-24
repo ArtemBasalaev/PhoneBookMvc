@@ -1,19 +1,11 @@
 <template>
-  <div id="app" v-cloak>
-    <div class="container">
+  <div id="app">
       <router-view :isSuccess="$store.state.isSuccess"></router-view>
-    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
+  name: "App",
 }
 </script>
-
-<style lang="scss">
-[v-cloak] {
-  display: none;
-}
-</style>

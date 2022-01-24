@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using PhoneBook.Contracts.Dto;
 using PhoneBook.DataAccess;
 
 namespace PhoneBook.BusinessLogic.Handlers
@@ -13,25 +15,26 @@ namespace PhoneBook.BusinessLogic.Handlers
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public HandleResult Handle(int[] contactsId)
+        public async Task<HandlerResult> Handle(int[] contactsId)
         {
-            if (contactsId != null)
+            if (contactsId == null)
             {
-                foreach (var id in contactsId)
-                {
-                    var contact = _dbContext.Contacts.FirstOrDefault(c => c.Id == id);
-
-                    if (contact != null)
-                    {
-                        _dbContext.Contacts.Remove(contact);
-                        _dbContext.SaveChanges();
-                    }
-                }
-
-                return new HandleResult { Success = true, Message = "Successfully delete" };
+                return new HandlerResult {Message = "Error"};
             }
 
-            return new HandleResult { Success = false, Message = "Error" };
+            foreach (var id in contactsId)
+            {
+               var contact = _dbContext.Contacts.FirstOrDefaultAsync(c => c.Id == id);
+
+                if (contact != null)
+                {
+                    _dbContext.Contacts.Remove(await contact);
+                }
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+            return new HandlerResult {Success = true, Message = "Successfully delete"};
         }
     }
 }

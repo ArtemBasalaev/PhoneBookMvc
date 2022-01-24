@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using PhoneBook.BusinessLogic.Handlers;
 using PhoneBook.Contracts.Dto;
-
+using System;
+using System.Threading.Tasks;
 
 namespace PhoneBook.Controllers
 {
@@ -10,48 +11,49 @@ namespace PhoneBook.Controllers
     [Route("api/[controller]/[action]")]
     public class PhoneBookController : ControllerBase
     {
-        private readonly GetContactsHandler _getContactsHandler;
-        private readonly CreateContactHandler _createContactHandler;
-        private readonly DeleteContactHandler _deleteContactHandler;
-        private readonly DeleteContactsHandler _deleteContactsHandler;
-
-        public PhoneBookController(GetContactsHandler getContactsHandler, CreateContactHandler createContactHandler, DeleteContactHandler deleteContactHandler, DeleteContactsHandler deleteContactsHandler)
-        {
-            _getContactsHandler = getContactsHandler ?? throw new System.ArgumentNullException(nameof(getContactsHandler));
-            _createContactHandler = createContactHandler ?? throw new System.ArgumentNullException(nameof(createContactHandler));
-            _deleteContactHandler = deleteContactHandler ?? throw new System.ArgumentNullException(nameof(deleteContactHandler));
-            _deleteContactsHandler = deleteContactsHandler ?? throw new System.ArgumentNullException(nameof(deleteContactsHandler));
-
-        }
-
         [HttpGet]
-        public List<ContactDto> GetContacts(string term)
+        public async Task<List<ContactDto>> GetContacts(string term, [FromServices] GetContactsHandler getContactsHandler)
         {
-            return _getContactsHandler.Handle(term);
+            if (getContactsHandler == null)
+            {
+                throw new ArgumentNullException(nameof(getContactsHandler));
+            }
+
+            return await getContactsHandler.Handle(term);
         }
 
         [HttpPost]
-        public ActionResult CreateContact(ContactDto contact)
+        public async Task<HandlerResult> CreateContact(ContactDto contact, [FromServices] CreateContactHandler createContactHandler)
         {
-            var handleResult = _createContactHandler.Handle(contact);
+            if (createContactHandler == null)
+            {
+                throw new ArgumentNullException(nameof(createContactHandler));
+            }
 
-            return new JsonResult(handleResult);
+            return await createContactHandler.Handle(contact);
         }
 
         [HttpPost]
-        public ActionResult DeleteContact(ContactToDeleteDto contactToDelete)
+        public async Task<HandlerResult> DeleteContact(int[] contactsId, [FromServices] DeleteContactsHandler deleteContactsHandler)
         {
-            var handleResult = _deleteContactHandler.Handle(contactToDelete);
+            if (deleteContactsHandler == null)
+            {
+                throw new ArgumentNullException(nameof(deleteContactsHandler));
+            }
 
-            return new JsonResult(handleResult);
+            return await deleteContactsHandler.Handle(contactsId);
         }
 
         [HttpPost]
-        public ActionResult DeleteContacts(int[] contactsId)
+        public async Task<HandlerResult> DeleteContacts(int[] contactsId,
+            [FromServices] DeleteContactsHandler deleteContactsHandler)
         {
-            var handleResult = _deleteContactsHandler.Handle(contactsId);
+            if (deleteContactsHandler == null)
+            {
+                throw new ArgumentNullException(nameof(deleteContactsHandler));
+            }
 
-            return new JsonResult(handleResult);
+            return await deleteContactsHandler.Handle(contactsId);
         }
     }
 }

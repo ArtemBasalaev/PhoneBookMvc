@@ -30,7 +30,6 @@ namespace PhoneBook
             services.AddTransient<DbInitializer>();
             services.AddTransient<GetContactsHandler>();
             services.AddTransient<CreateContactHandler>();
-            services.AddTransient<DeleteContactHandler>();
             services.AddTransient<DeleteContactsHandler>();
             services.AddControllersWithViews();
         }
@@ -46,6 +45,7 @@ namespace PhoneBook
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
 
             app.UseDefaultFiles();
@@ -57,7 +57,7 @@ namespace PhoneBook
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers(); 
+                endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
             });
         }

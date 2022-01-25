@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PhoneBook.DataAccess;
 
@@ -14,9 +15,9 @@ namespace PhoneBook
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public void Initialize()
+        public async Task InitializeAsync()
         {
-            _dbContext.Database.Migrate();
+            await _dbContext.Database.MigrateAsync();
         }
     }
 }

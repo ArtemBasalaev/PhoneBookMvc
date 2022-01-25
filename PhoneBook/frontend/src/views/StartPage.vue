@@ -152,7 +152,7 @@ export default {
       homePhoneInputText: "",
 
       searchInputText: "",
-      therm: "",
+      term: "",
 
       isInvalid: false,
       isCheckedAllContacts: false,

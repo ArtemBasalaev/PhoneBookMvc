@@ -37,33 +37,27 @@ export default {
     }
   },
 
-  data: function () {
+  data() {
     return {
       isChecked: false
     };
   },
 
   methods: {
-    setContactToDelete: function () {
+    setContactToDelete() {
       this.$emit("set-contact-to-delete", this.contact);
     },
 
-    setContactCheckedToDelete: function () {
+    setContactCheckedToDelete() {
       this.$emit("set-contact-checked-to-delete", this.contact.id, this.isChecked);
     }
   },
 
   watch: {
-    isCheckedAll: function (newValue) {
+    isCheckedAll(newValue) {
       this.isChecked = newValue;
       this.setContactCheckedToDelete();
     }
-  },
+  }
 }
 </script>
-
-<style lang="css">
-[v-cloak] {
-  display: none;
-}
-</style>

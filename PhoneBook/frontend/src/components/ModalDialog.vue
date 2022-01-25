@@ -31,7 +31,7 @@ export default {
   },
 
   methods: {
-    confirmToDelete: function () {
+    confirmToDelete() {
       this.$emit("delete-confirm");
     }
   }

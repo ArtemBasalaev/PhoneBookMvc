@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PhoneBook.BusinessLogic.Handlers;
 using PhoneBook.Contracts.Dto;
-using System;
 using System.Threading.Tasks;
 
 namespace PhoneBook.Controllers
@@ -12,48 +11,28 @@ namespace PhoneBook.Controllers
     public class PhoneBookController : ControllerBase
     {
         [HttpGet]
-        public async Task<List<ContactDto>> GetContacts(string term, [FromServices] GetContactsHandler getContactsHandler)
+        public List<ContactDto> GetContacts(string term,
+            [FromServices] GetContactsHandler getContactsHandler)
         {
-            if (getContactsHandler == null)
-            {
-                throw new ArgumentNullException(nameof(getContactsHandler));
-            }
-
-            return await getContactsHandler.Handle(term);
+            return getContactsHandler.Handle(term);
         }
 
         [HttpPost]
-        public async Task<HandlerResult> CreateContact(ContactDto contact, [FromServices] CreateContactHandler createContactHandler)
+        public async Task<HandlerResult> CreateContactAsync(ContactDto contact, [FromServices] CreateContactHandler createContactHandler)
         {
-            if (createContactHandler == null)
-            {
-                throw new ArgumentNullException(nameof(createContactHandler));
-            }
-
-            return await createContactHandler.Handle(contact);
+            return await createContactHandler.HandleAsync(contact);
         }
 
         [HttpPost]
-        public async Task<HandlerResult> DeleteContact(int[] contactsId, [FromServices] DeleteContactsHandler deleteContactsHandler)
+        public async Task<HandlerResult> DeleteContactAsync(int[] contactsId, [FromServices] DeleteContactsHandler deleteContactsHandler)
         {
-            if (deleteContactsHandler == null)
-            {
-                throw new ArgumentNullException(nameof(deleteContactsHandler));
-            }
-
-            return await deleteContactsHandler.Handle(contactsId);
+            return await deleteContactsHandler.HandleAsync(contactsId);
         }
 
         [HttpPost]
-        public async Task<HandlerResult> DeleteContacts(int[] contactsId,
-            [FromServices] DeleteContactsHandler deleteContactsHandler)
+        public async Task<HandlerResult> DeleteContactsAsync(int[] contactsId, [FromServices] DeleteContactsHandler deleteContactsHandler)
         {
-            if (deleteContactsHandler == null)
-            {
-                throw new ArgumentNullException(nameof(deleteContactsHandler));
-            }
-
-            return await deleteContactsHandler.Handle(contactsId);
+            return await deleteContactsHandler.HandleAsync(contactsId);
         }
     }
 }

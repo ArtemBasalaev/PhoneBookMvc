@@ -1,11 +1,18 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import axios from "axios";
+import ApiUrls from "../api/ApiUrls";
+import RequestMethods from "../api/RequestMethods";
+
+let apiUrls = new ApiUrls("/api/PhoneBook/GetContacts", "/api/PhoneBook/CreateContact", "/api/PhoneBook/DeleteContact", "/api/PhoneBook/DeleteContacts");
+let requestMethods = new RequestMethods(apiUrls);
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
+        methods: requestMethods,
+        apiUrls: apiUrls,
+
         isLoading: false,
         isSuccess: false,
         contacts: [],
@@ -35,7 +42,7 @@ export default new Vuex.Store({
             context.commit("setIsLoading", true);
             context.commit("setContacts", []);
 
-            return axios.get("/api/PhoneBook/GetContacts", params)
+            return context.state.methods.getContacts(params)
                 .then(response => {
                     context.commit("setContacts", response.data);
                 })
@@ -43,12 +50,12 @@ export default new Vuex.Store({
                     alert("Load contacts fail");
                 })
                 .then(() => {
-                context.commit("setIsLoading", false);
-            });
+                    context.commit("setIsLoading", false);
+                });
         },
 
         deleteContact(context, contactId) {
-            return axios.post("/api/PhoneBook/DeleteContact", contactId)
+            return context.state.methods.deleteContact(contactId)
                 .then(response => {
                     if (!response.data.success) {
                         context.commit("setIsSuccess", false);
@@ -64,7 +71,7 @@ export default new Vuex.Store({
         },
 
         deleteCheckedContacts(context, contactsId) {
-            return axios.post("/api/PhoneBook/DeleteContacts", contactsId)
+            return context.state.methods.deleteContacts(contactsId)
                 .then(response => {
                     if (!response.data.success) {
                         context.commit("setIsSuccess", false);
@@ -79,14 +86,14 @@ export default new Vuex.Store({
                 });
         },
 
-        createContact(context, newContact, term) {
-            return axios.post("/api/PhoneBook/CreateContact", newContact)
+        createContact(context, newContact) {
+            return context.state.methods.createContact(newContact)
                 .then(response => {
                     if (!response.data.success) {
                         context.commit("setContactExistStatus", true);
                         context.commit("setIsSuccess", false);
                     } else {
-                        context.dispatch("loadContacts", term);
+                        context.dispatch("loadContacts");
                         context.commit("setContactExistStatus", false);
                         context.commit("setIsSuccess", true);
                     }

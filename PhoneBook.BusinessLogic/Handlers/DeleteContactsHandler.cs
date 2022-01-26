@@ -30,7 +30,7 @@ namespace PhoneBook.BusinessLogic.Handlers
                 .Where(c => contactsId.Contains(c.Id))
                 .ToListAsync();
 
-            if (contactsToDelete == null)
+            if (!contactsToDelete.Any())
             {
                 return new HandlerResult
                 {

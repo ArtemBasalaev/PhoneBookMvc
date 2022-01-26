@@ -1,17 +1,12 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import ApiUrls from "../api/ApiUrls";
-import RequestMethods from "../api/RequestMethods";
-
-let apiUrls = new ApiUrls("/api/PhoneBook/GetContacts", "/api/PhoneBook/CreateContact", "/api/PhoneBook/DeleteContact", "/api/PhoneBook/DeleteContacts");
-let requestMethods = new RequestMethods(apiUrls);
+import PhoneBookService from "../service/phoneBookService";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        methods: requestMethods,
-        apiUrls: apiUrls,
+        phoneBookService: new PhoneBookService(),
 
         isLoading: false,
         isSuccess: false,
@@ -42,7 +37,7 @@ export default new Vuex.Store({
             context.commit("setIsLoading", true);
             context.commit("setContacts", []);
 
-            return context.state.methods.getContacts(params)
+            return context.state.phoneBookService.getContacts(params)
                 .then(response => {
                     context.commit("setContacts", response.data);
                 })
@@ -55,7 +50,7 @@ export default new Vuex.Store({
         },
 
         deleteContact(context, contactId) {
-            return context.state.methods.deleteContact(contactId)
+            return context.state.phoneBookService.deleteContact(contactId)
                 .then(response => {
                     if (!response.data.success) {
                         context.commit("setIsSuccess", false);
@@ -71,7 +66,7 @@ export default new Vuex.Store({
         },
 
         deleteCheckedContacts(context, contactsId) {
-            return context.state.methods.deleteContacts(contactsId)
+            return context.state.phoneBookService.deleteContacts(contactsId)
                 .then(response => {
                     if (!response.data.success) {
                         context.commit("setIsSuccess", false);
@@ -87,7 +82,7 @@ export default new Vuex.Store({
         },
 
         createContact(context, newContact) {
-            return context.state.methods.createContact(newContact)
+            return context.state.phoneBookService.createContact(newContact)
                 .then(response => {
                     if (!response.data.success) {
                         context.commit("setContactExistStatus", true);

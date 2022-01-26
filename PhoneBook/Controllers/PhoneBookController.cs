@@ -11,28 +11,27 @@ namespace PhoneBook.Controllers
     public class PhoneBookController : ControllerBase
     {
         [HttpGet]
-        public List<ContactDto> GetContacts(string term,
-            [FromServices] GetContactsHandler getContactsHandler)
+        public Task<List<ContactDto>> GetContactsAsync(string term, [FromServices] GetContactsHandler getContactsHandler)
         {
-            return getContactsHandler.Handle(term);
+            return getContactsHandler.HandleAsync(term);
         }
 
         [HttpPost]
-        public async Task<HandlerResult> CreateContactAsync(ContactDto contact, [FromServices] CreateContactHandler createContactHandler)
+        public Task<HandlerResult> CreateContactAsync(ContactDto contact, [FromServices] CreateContactHandler createContactHandler)
         {
-            return await createContactHandler.HandleAsync(contact);
+            return createContactHandler.HandleAsync(contact);
         }
 
         [HttpPost]
-        public async Task<HandlerResult> DeleteContactAsync(int[] contactsId, [FromServices] DeleteContactsHandler deleteContactsHandler)
+        public Task<HandlerResult> DeleteContactAsync(int[] contactsId, [FromServices] DeleteContactsHandler deleteContactsHandler)
         {
-            return await deleteContactsHandler.HandleAsync(contactsId);
+            return deleteContactsHandler.HandleAsync(contactsId);
         }
 
         [HttpPost]
-        public async Task<HandlerResult> DeleteContactsAsync(int[] contactsId, [FromServices] DeleteContactsHandler deleteContactsHandler)
+        public Task<HandlerResult> DeleteContactsAsync(int[] contactsIds, [FromServices] DeleteContactsHandler deleteContactsHandler)
         {
-            return await deleteContactsHandler.HandleAsync(contactsId);
+            return deleteContactsHandler.HandleAsync(contactsIds);
         }
     }
 }

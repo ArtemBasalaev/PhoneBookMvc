@@ -75,13 +75,15 @@
       </div>
 
       <div class="d-flex flex-row-reverse pe-3">
-        <button type="button" class="btn btn-danger my-3" data-bs-toggle="modal" data-bs-target="#delete-confirmation"
+        <button type="button" class="btn btn-danger my-3" data-bs-toggle="modal" data-bs-target="#modal-dialog"
                 @click="setModalDialogDeleteContactsMode" :disabled="!hasContactsToDelete">
           Delete checked
         </button>
       </div>
 
-      <modal-dialog :dialog-message="dialogMessage" @delete-confirm="deleteWithConfirmation"></modal-dialog>
+      <modal-dialog :dialog-message="dialogMessage"
+                    :dialog-title="dialogTitle"
+                    @confirm="deleteWithConfirmation"></modal-dialog>
     </div>
   </div>
 </template>
@@ -113,11 +115,11 @@ export default {
     },
 
     hasContactsToDelete() {
-      return this.contactsIdToDelete.length !== 0;
+      return this.contactsIdsToDelete.length !== 0;
     },
 
     contactsCountToDelete() {
-      return this.contactsIdToDelete.length;
+      return this.contactsIdsToDelete.length;
     }
   },
 
@@ -128,7 +130,7 @@ export default {
         this.clearSearchField();
 
         this.isCheckedAllContacts = false;
-        this.contactsIdToDelete = [];
+        this.contactsIdsToDelete = [];
         this.$store.state.isSuccess = false;
       }
     },
@@ -143,7 +145,7 @@ export default {
   data() {
     return {
       contactToDelete: {},
-      contactsIdToDelete: [],
+      contactsIdsToDelete: [],
 
       firstNameInputText: "",
       middleNameInputText: "",
@@ -158,7 +160,9 @@ export default {
       isCheckedAllContacts: false,
 
       isModalDialogDeleteContactMode: false,
-      dialogMessage: ""
+
+      dialogMessage: "",
+      dialogTitle: "Confirm delete"
     };
   },
 
@@ -166,18 +170,18 @@ export default {
     createContact() {
       this.$store.commit("setContactExistStatus", false);
 
-      let firstNameText = this.firstNameInputText.trim();
-      let middleNameText = this.middleNameInputText.trim();
-      let lastNameText = this.lastNameInputText.trim();
-      let mobilePhoneText = this.mobilePhoneInputText.trim();
-      let homePhoneText = this.homePhoneInputText.trim();
+      const firstNameText = this.firstNameInputText.trim();
+      const middleNameText = this.middleNameInputText.trim();
+      const lastNameText = this.lastNameInputText.trim();
+      const mobilePhoneText = this.mobilePhoneInputText.trim();
+      const homePhoneText = this.homePhoneInputText.trim();
 
       if (firstNameText.length === 0 || lastNameText.length === 0 || mobilePhoneText.length === 0) {
         this.isInvalid = true;
         return;
       }
 
-      let newContact = {
+      const newContact = {
         firstName: firstNameText,
         middleName: middleNameText,
         lastName: lastNameText,
@@ -209,10 +213,10 @@ export default {
     },
 
     searchContacts() {
-      this.contactsIdToDelete = [];
+      this.contactsIdsToDelete = [];
       this.term = this.searchInputText.trim();
 
-      let term = {
+      const term = {
         params: {term: this.term}
       };
 
@@ -245,7 +249,7 @@ export default {
 
     deleteCheckedContacts() {
       this.clearSearchField();
-      this.$store.dispatch("deleteCheckedContacts", this.contactsIdToDelete);
+      this.$store.dispatch("deleteCheckedContacts", this.contactsIdsToDelete);
     },
 
     setContactToDelete(contact) {
@@ -257,11 +261,11 @@ export default {
 
     setIsCheckedToDelete(contactId, isChecked) {
       if (isChecked) {
-        this.contactsIdToDelete.push(contactId);
+        this.contactsIdsToDelete.push(contactId);
         return;
       }
 
-      this.contactsIdToDelete = this.contactsIdToDelete.filter(id => id !== contactId);
+      this.contactsIdsToDelete = this.contactsIdsToDelete.filter(id => id !== contactId);
     },
 
     setModalDialogDeleteContactsMode: function () {
@@ -270,8 +274,8 @@ export default {
     },
 
     checkContactsDeleteStatus() {
-      return this.contactsIdToDelete;
+      return this.contactsIdsToDelete;
     }
   }
-}
+};
 </script>

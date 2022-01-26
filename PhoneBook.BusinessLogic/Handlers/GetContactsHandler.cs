@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PhoneBook.Contracts.Dto;
 using PhoneBook.DataAccess;
@@ -16,9 +17,9 @@ namespace PhoneBook.BusinessLogic.Handlers
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public List<ContactDto> Handle(string term)
+        public Task<List<ContactDto>> HandleAsync(string term)
         {
-            var queryString = term == null ? "" : term.ToUpper();
+            var queryString = term ?? "";
 
             return _dbContext.Contacts
                 .AsNoTracking()
@@ -44,7 +45,7 @@ namespace PhoneBook.BusinessLogic.Handlers
                 .OrderBy(p => p.LastName)
                 .ThenBy(p => p.FirstName)
                 .ThenBy(p => p.MiddleName)
-                .ToList();
+                .ToListAsync();
         }
     }
 }

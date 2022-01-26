@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +45,7 @@ namespace PhoneBook.BusinessLogic.Handlers
 
             var mobilePhone = contactDto.PhoneNumbers.FirstOrDefault(p => p.Type == PhoneNumberType.Mobile);
 
-            if (mobilePhone == null || string.IsNullOrWhiteSpace(mobilePhone.Phone))
+            if (string.IsNullOrWhiteSpace(mobilePhone?.Phone))
             {
                 return new HandlerResult
                 {
@@ -54,7 +53,7 @@ namespace PhoneBook.BusinessLogic.Handlers
                 };
             }
 
-            if (await _dbContext.PhoneNumbers.AnyAsync(p => string.Equals(p.Phone, mobilePhone.Phone)))
+            if (await _dbContext.PhoneNumbers.AnyAsync(p => p.Phone == mobilePhone.Phone))
             {
                 return new HandlerResult
                 {
@@ -67,24 +66,22 @@ namespace PhoneBook.BusinessLogic.Handlers
                 FirstName = contactDto.FirstName,
                 LastName = contactDto.LastName,
                 MiddleName = contactDto.MiddleName,
-                PhoneNumbers = new List<PhoneNumber>()
+                PhoneNumbers = contactDto.PhoneNumbers
+                    .Select(p => new PhoneNumber
+                    {
+                        Phone = p.Phone,
+                        Type = p.Type
+                    })
+                    .ToList()
             };
-
-            foreach (var phone in contactDto.PhoneNumbers)
-            {
-                contact.PhoneNumbers.Add(new PhoneNumber
-                {
-                    Phone = phone.Phone,
-                    Type = phone.Type
-                });
-            }
 
             _dbContext.Add(contact);
             await _dbContext.SaveChangesAsync();
 
             return new HandlerResult
             {
-                Success = true, Message = "Successfully add"
+                Success = true,
+                Message = "Successfully add"
             };
         }
     }

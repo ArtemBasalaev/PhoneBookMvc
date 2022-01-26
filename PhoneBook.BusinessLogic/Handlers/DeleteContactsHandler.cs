@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PhoneBook.Contracts.Dto;
@@ -21,25 +22,29 @@ namespace PhoneBook.BusinessLogic.Handlers
             {
                 return new HandlerResult
                 {
-                    Message = "Error"
+                    Message = "Contacts ids is undefined"
                 };
             }
 
-            foreach (var id in contactsId)
-            {
-                var contact = _dbContext.Contacts.FirstOrDefaultAsync(c => c.Id == id);
+            var contactsToDelete = await _dbContext.Contacts
+                .Where(c => contactsId.Contains(c.Id))
+                .ToListAsync();
 
-                if (contact != null)
+            if (contactsToDelete == null)
+            {
+                return new HandlerResult
                 {
-                    _dbContext.Contacts.Remove(await contact);
-                }
+                    Message = "Contacts ids is not exist"
+                };
             }
 
+            _dbContext.Contacts.RemoveRange(contactsToDelete);
             await _dbContext.SaveChangesAsync();
 
             return new HandlerResult
             {
-                Success = true, Message = "Successfully delete"
+                Success = true,
+                Message = "Successfully delete"
             };
         }
     }

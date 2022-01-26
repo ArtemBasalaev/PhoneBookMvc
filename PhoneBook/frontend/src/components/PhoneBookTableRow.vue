@@ -11,7 +11,7 @@
     </td>
     <td>
       <button @click="setContactToDelete" type="button" class="btn btn-danger" data-bs-toggle="modal"
-              data-bs-target="#delete-confirmation">
+              data-bs-target="#modal-dialog">
         Delete
       </button>
     </td>
@@ -59,5 +59,5 @@ export default {
       this.setContactCheckedToDelete();
     }
   }
-}
+};
 </script>

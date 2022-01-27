@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PhoneBook.DataAccess;
 
-
 namespace PhoneBook
 {
     public class DbInitializer
@@ -15,9 +14,9 @@ namespace PhoneBook
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task InitializeAsync()
+        public Task InitializeAsync()
         {
-            await _dbContext.Database.MigrateAsync();
+            return Task.Run(() => _dbContext.Database.MigrateAsync());
         }
     }
 }

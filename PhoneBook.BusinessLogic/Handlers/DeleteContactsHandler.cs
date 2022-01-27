@@ -16,9 +16,9 @@ namespace PhoneBook.BusinessLogic.Handlers
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<HandlerResult> HandleAsync(int[] contactsId)
+        public async Task<HandlerResult> HandleAsync(int[] contactsIds)
         {
-            if (contactsId == null)
+            if (contactsIds == null)
             {
                 return new HandlerResult
                 {
@@ -27,7 +27,7 @@ namespace PhoneBook.BusinessLogic.Handlers
             }
 
             var contactsToDelete = await _dbContext.Contacts
-                .Where(c => contactsId.Contains(c.Id))
+                .Where(c => contactsIds.Contains(c.Id))
                 .ToListAsync();
 
             if (!contactsToDelete.Any())

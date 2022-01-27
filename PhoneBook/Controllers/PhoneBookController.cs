@@ -23,12 +23,6 @@ namespace PhoneBook.Controllers
         }
 
         [HttpPost]
-        public Task<HandlerResult> DeleteContactAsync(int[] contactsId, [FromServices] DeleteContactsHandler deleteContactsHandler)
-        {
-            return deleteContactsHandler.HandleAsync(contactsId);
-        }
-
-        [HttpPost]
         public Task<HandlerResult> DeleteContactsAsync(int[] contactsIds, [FromServices] DeleteContactsHandler deleteContactsHandler)
         {
             return deleteContactsHandler.HandleAsync(contactsIds);

@@ -8,12 +8,12 @@
           <input v-model="firstNameInputText" type="text" class="form-control" id="first-name" required>
           <div class="invalid-feedback">*field is empty</div>
 
-          <label for="middle-name" class="form-label mt-2">Middle name:</label>
-          <input v-model="middleNameInputText" type="text" class="form-control" id="middle-name">
-
           <label for="last-name" class="form-label mt-2">Last name*:</label>
           <input v-model="lastNameInputText" type="text" class="form-control" id="last-name" required>
           <div class="invalid-feedback">*field is empty</div>
+
+          <label for="middle-name" class="form-label mt-2">Middle name:</label>
+          <input v-model="middleNameInputText" type="text" class="form-control" id="middle-name">
 
           <label for="mobile-phone" class="form-label mt-2">Mobile phone*:</label>
           <input v-model="mobilePhoneInputText" type="text" class="form-control" id="mobile-phone" required>
@@ -131,7 +131,7 @@ export default {
 
         this.isCheckedAllContacts = false;
         this.contactsIdsToDelete = [];
-        this.$store.state.isSuccess = false;
+        this.$store.commit("setIsSuccess", false);
       }
     },
 
@@ -244,12 +244,12 @@ export default {
 
     deleteContact() {
       this.clearSearchField();
-      this.$store.dispatch("deleteContact", [this.contactToDelete.id]);
+      this.$store.dispatch("deleteContacts", [this.contactToDelete.id]);
     },
 
     deleteCheckedContacts() {
       this.clearSearchField();
-      this.$store.dispatch("deleteCheckedContacts", this.contactsIdsToDelete);
+      this.$store.dispatch("deleteContacts", this.contactsIdsToDelete);
     },
 
     setContactToDelete(contact) {

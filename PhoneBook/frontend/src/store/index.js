@@ -49,24 +49,8 @@ export default new Vuex.Store({
                 });
         },
 
-        deleteContact(context, contactId) {
-            return context.state.phoneBookService.deleteContact(contactId)
-                .then(response => {
-                    if (!response.data.success) {
-                        context.commit("setIsSuccess", false);
-                        alert(response.data.message);
-                    } else {
-                        context.commit("setIsSuccess", true);
-                        context.dispatch("loadContacts");
-                    }
-                })
-                .catch(() => {
-                    alert("Delete fail");
-                });
-        },
-
-        deleteCheckedContacts(context, contactsId) {
-            return context.state.phoneBookService.deleteContacts(contactsId)
+        deleteContacts(context, contactsIds) {
+            return context.state.phoneBookService.deleteContacts(contactsIds)
                 .then(response => {
                     if (!response.data.success) {
                         context.commit("setIsSuccess", false);

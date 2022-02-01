@@ -16,7 +16,7 @@ namespace PhoneBook
 
         public Task InitializeAsync()
         {
-            return Task.Run(() => _dbContext.Database.MigrateAsync());
+            return _dbContext.Database.MigrateAsync();
         }
     }
 }
